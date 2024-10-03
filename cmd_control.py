@@ -15,6 +15,8 @@ LOGGING_FILENAME = r"zketech.log"
 LOGGING_LEVEL = logging.INFO
 BLOCKING_SAFETY_WATCHER = True
 
+if not os.path.exists(WORKING_DIRECTORY):
+    os.mkdir(WORKING_DIRECTORY)
 
 logging.basicConfig(filename=os.path.join(WORKING_DIRECTORY, LOGGING_FILENAME), 
                     encoding='utf-8', 
