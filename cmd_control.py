@@ -118,7 +118,7 @@ class StopDevice:
 class ContinuousRead:
     """Continuously read data from the device"""
 
-    prompt = "Continuously read data from the device"
+    prompt = "Continuously read data from the device (ctrl+c to stop)"
 
     def __init__(self, device: Zketech, sw: SafetyWatcher):
         logger.info("Start program 'ContinuousRead'")
