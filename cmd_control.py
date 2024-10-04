@@ -455,10 +455,10 @@ if __name__ == "__main__":
                 try:
                     print()
                     choice_made(zk, sw)
-                except ZketechParametersError:
-                    print("The function was requested with an improper parameter")
                 except KeyboardInterrupt:
                     pass
+                except ZketechParametersError:
+                    print("The function was requested with an improper parameter")
                 
         except KeyboardInterrupt:
             pass
