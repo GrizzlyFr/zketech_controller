@@ -93,7 +93,7 @@ class EvaluateDevice:
         logger.info("Start program 'EvaluateDevice'")
         device.get_device_state()
         print(f"Device in state {zk.device_state.name}")
-        logger.info("Stop program 'EvaluateDevice' with result: zk.device_state")
+        logger.info(f"Stop program 'EvaluateDevice' with result: {zk.device_state}")
 
 class StartDevice:
     """Request the device to continuously send response frames."""
