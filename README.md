@@ -35,4 +35,3 @@ Partially translated manuals are provided in the 'user_manuals' folder
 The next developpement stages shall be:
 - Building a graphical interface with support for local languages and multiple steps tests described in text files
 - Fixing upper boundaries checks when launching tests
-- Finding the exchange frames when performing a calibration
