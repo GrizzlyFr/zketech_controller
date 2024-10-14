@@ -402,6 +402,84 @@ class ResistanceMeasurement:
             logger.info(f"Measured resistance: {resistance} mOhm")
         logger.info(f"Stop program 'ConstantCurrentDischarge' with a returned value of '{resistance}'")
 
+class LowVoltageCalibration:
+    """Calibrate the lower values of the voltage measurement."""
+    
+    prompt = "Calibrate the low voltage measurement"
+    
+    def __init__(self, device: Zketech, sw: SafetyWatcher):
+        logger.info("Getting parameter for 'LowVoltageCalibration'")
+        print("Enter low voltage calibration value (V):")
+        voltage = input("> ")
+        try:
+            self.voltage = float(voltage)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User typed a wrong value")
+            return
+        print()
+        logger.info(f"Setting low voltage calibration to {voltage} V")
+        device.calibrate_voltage(self.voltage, "lower")
+
+class HighVoltageCalibration:
+    """Calibrate the upper values of the voltage measurement."""
+    
+    prompt = "Calibrate the high voltage measurement"
+    
+    def __init__(self, device: Zketech, sw: SafetyWatcher):
+        logger.info("Getting parameter for 'HighVoltageCalibration'")
+        print("Enter high voltage calibration value (V):")
+        voltage = input("> ")
+        try:
+            self.voltage = float(voltage)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User typed a wrong value")
+            return
+        print()
+        logger.info(f"Setting high voltage calibration to {voltage} V")
+        device.calibrate_voltage(self.voltage, "upper")
+
+class LowCurrentCalibration:
+    """Calibrate the lower value of the current measurement."""
+    
+    prompt = "Calibrate the low current measurement"
+    
+    def __init__(self, device: Zketech, sw: SafetyWatcher):
+        logger.info("Getting parameter for 'LowCurrentCalibration'")
+        print("The device shall first be supplied a proper tension and be in constant current discharge to calibrate the current")
+        print("Enter low current calibration value (A):")
+        current = input("> ")
+        try:
+            self.current = float(current)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User typed a wrong value")
+            return
+        print()
+        logger.info(f"Setting low current calibration to {voltage} V")
+        device.calibrate_current(self.current, "lower")
+
+class HighCurrentCalibration:
+    """Calibrate the upper value of the current measurement."""
+    
+    prompt = "Calibrate the high current measurement"
+    
+    def __init__(self, device: Zketech, sw: SafetyWatcher):
+        logger.info("Getting parameter for 'HighCurrentCalibration'")
+        print("The device shall first be supplied a proper tension and be in constant current discharge to calibrate the current")
+        print("Enter high current calibration value (A):")
+        current = input("> ")
+        try:
+            self.current = float(current)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User typed a wrong value")
+            return
+        print()
+        logger.info(f"Setting low current calibration to {voltage} V")
+        device.calibrate_current(self.current, "upper")
+
 
 choices_available = [
     EvaluateDevice,
@@ -419,6 +497,10 @@ choices_available = [
     VrlaCharge,
     CvCharge,
     ResistanceMeasurement,
+    LowVoltageCalibration,
+    HighVoltageCalibration,
+    LowCurrentCalibration,
+    HighCurrentCalibration,
     ]
 
 if __name__ == "__main__":

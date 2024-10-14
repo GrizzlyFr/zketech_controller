@@ -57,8 +57,8 @@ class ReqCode(Enum):
     b3..b0=0: not used
     b3..b0=1: start test
     b3..b0=2: stop test
-    b3..b0=3: not used
-    b3..b0=4: not used
+    b3..b0=3: not used / unknown
+    b3..b0=4: calibration
     b3..b0=5: start device
     b3..b0=6: stop device
     b3..b0=7: update test
@@ -83,6 +83,7 @@ class ReqCode(Enum):
     start_device =      0b00000101
     mes_resistance =    0b00001001
     update_test =       0b00000111
+    calibrate =         0b00000100
     start_d_cc =        0b00000001
     start_d_cp =        0b00010001
     start_c_nimh =      0b00100001
@@ -733,3 +734,61 @@ class Zketech(Serial):
             logger.debug("The resistance measurement request got no response")
             return
         return int(res.c/(p1/1000))
+
+    def calibrate_voltage(self,
+                          voltage: float,
+                          level:str) -> None:
+        """Calibrate the voltage measurement of the device.
+        
+        Voltage is in Volts. Level is 'lower' or 'upper'.
+        
+        """
+        if not self.device_state == DeviceState["monitoring"]:
+            logger.warning(f"A performing of a voltage calibration was requested while device in wrong state ({self.device_state})")
+            return
+        if voltage < 0:
+            raise ZketechParametersError("Voltage shall be positive")
+        if not level in ("lower", "upper"):
+            raise ZketechParametersError("Level shall be 'lower' or 'upper'")
+        req_code = ReqCode["calibrate"]
+        ### Fix for weird Zketech coding: for calibration, they add one field and shift p1
+        p1 = int(voltage * 1000) // 240
+        p2 = int(voltage * 1000) % 240 * 240
+        p3 = 0
+        if level == "lower":
+            p1 += 240 * 0
+        if level == "upper":
+            p1 += 240 * 1
+        ###
+        logger.debug(f"Sending request {(req_code, p1, p2, p3)}")
+        self.send_request(req_code, p1, p2, p3)
+        self.reset_input_buffer()
+
+    def calibrate_current(self,
+                         current: float,
+                         level:str) -> None:
+        """Calibrate the current measurement of the device.
+        
+        Current is in Amp. Level is 'lower' or 'upper'.
+        
+        """
+        if (not self.device_state == DeviceState["testing"]) or \
+           (not self.prog_state == ProgState["d_cc"]):
+            logger.warning(f"A performing of a current calibration was requested while device in wrong state ({self.device_state}, {self.prog_state})")
+            return
+        if current < 0:
+            raise ZketechParametersError("Current shall be positive")
+        if not level in ("lower", "upper"):
+            raise ZketechParametersError("Level shall be 'lower' or 'upper'")
+        ### Fix for weird Zketech coding: for calibration, they add one field and shift p1
+        req_code = ReqCode["calibrate"]
+        p1 = int(current * 1000) // 240
+        p2 = int(current * 1000) % 240 * 240
+        p3 = 0
+        if level == "lower":
+            p1 += 240 * 2
+        if level == "upper":
+            p1 += 240 * 3
+        logger.debug(f"Sending request {(req_code, p1, p2, p3)}")
+        self.send_request(req_code, p1, p2, p3)
+        self.reset_input_buffer()
