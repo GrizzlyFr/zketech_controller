@@ -506,10 +506,10 @@ class Zketech(Serial):
         """
         self.part_number = None
         self.battery_type = None
-        if not self.isOpen():
-            self.device_state = DeviceState["disconnected"]
-            logger.debug("Tried to read response from a disconnected device")
-            return
+#        if not self.isOpen():
+#            self.device_state = DeviceState["disconnected"]
+#            logger.debug("Tried to read response from a disconnected device")
+#            return
         # TBDone : Improvements: either have a constant async read on background or automatically
         # stop the PC connection so the device does not fill continuously the buffer
         if self.in_waiting > 19:
@@ -541,10 +541,10 @@ class Zketech(Serial):
         self.read_response()
     
     def start_device(self) -> None:
-        """Request the device to start sending frames."""
-        if not self.device_state == DeviceState["idle"]:
-            logger.warning(f"A startup of the device was requested while device in wrong state ({self.device_state})")
-            return
+#        """Request the device to start sending frames."""
+#        if not self.device_state == DeviceState["idle"]:
+#            logger.warning(f"A startup of the device was requested while device in wrong state ({self.device_state})")
+#            return
         req_code = ReqCode["start_device"]
         p1 = 0
         p2 = 0
@@ -554,9 +554,9 @@ class Zketech(Serial):
     
     def stop_device(self) -> None:
         """Request the device to stop sending frames."""
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A stopping of the device was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A stopping of the device was requested while device in wrong state ({self.device_state})")
+#            return
         req_code = ReqCode["stop_device"]
         p1 = 0
         p2 = 0
@@ -566,9 +566,9 @@ class Zketech(Serial):
 
     def stop_test(self):
         """Request the device to stop sending frames."""
-        if not self.device_state == DeviceState["testing"]:
-            logger.warning(f"A stopping of a test was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["testing"]:
+#            logger.warning(f"A stopping of a test was requested while device in wrong state ({self.device_state})")
+#            return
         req_code = ReqCode["stop_test"]
         p1 = 0
         p2 = 0
@@ -593,9 +593,9 @@ class Zketech(Serial):
                      cutoff_voltage: float,
                      max_duration: int=0) -> None:
         """Request the device to start a discharge test at constant current."""
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
+#            return
         if current < 0:
             raise ZketechParametersError("Current shall be positive")
         if cutoff_voltage < 0:
@@ -617,9 +617,9 @@ class Zketech(Serial):
                      cutoff_voltage: float,
                      max_duration: int=0) -> None:
         """Request the device to start a discharge test at constant power."""
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
+#            return
         if power < 0:
             raise ZketechParametersError("Power shall be positive")
         if cutoff_voltage < 0:
@@ -641,9 +641,9 @@ class Zketech(Serial):
                         current: float,
                         nb_cells: int,
                         max_duration: int) -> None:
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
+#            return
         if current < 0:
             raise ZketechParametersError("Current shall be positive")
         if nb_cells < 1:
@@ -715,9 +715,9 @@ class Zketech(Serial):
         Current is in mA.
         
         """
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A performing of a resistance measurement was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A performing of a resistance measurement was requested while device in wrong state ({self.device_state})")
+#            return
         if current < 0:
             raise ZketechParametersError("Current shall be positive")
         if current > 30000:  # Is it only for EBC-A05+ or is it standard?
@@ -743,9 +743,9 @@ class Zketech(Serial):
         Voltage is in Volts. Level is 'lower' or 'upper'.
         
         """
-        if not self.device_state == DeviceState["monitoring"]:
-            logger.warning(f"A performing of a voltage calibration was requested while device in wrong state ({self.device_state})")
-            return
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A performing of a voltage calibration was requested while device in wrong state ({self.device_state})")
+#            return
         if voltage < 0:
             raise ZketechParametersError("Voltage shall be positive")
         if not level in ("lower", "upper"):
@@ -772,10 +772,10 @@ class Zketech(Serial):
         Current is in Amp. Level is 'lower' or 'upper'.
         
         """
-        if (not self.device_state == DeviceState["testing"]) or \
-           (not self.prog_state == ProgState["d_cc"]):
-            logger.warning(f"A performing of a current calibration was requested while device in wrong state ({self.device_state}, {self.prog_state})")
-            return
+#        if (not self.device_state == DeviceState["testing"]) or \
+#           (not self.prog_state == ProgState["d_cc"]):
+#            logger.warning(f"A performing of a current calibration was requested while device in wrong state ({self.device_state}, {self.prog_state})")
+#            return
         if current < 0:
             raise ZketechParametersError("Current shall be positive")
         if not level in ("lower", "upper"):

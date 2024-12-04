@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Textual interface to control Zketech Mono-Channel Battery Testers
 
 Does not provide multi-steps tests
