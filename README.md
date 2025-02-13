@@ -12,6 +12,9 @@ Moreover, Zketech devices are shipped with Chinese only manuals.
 
 This depot is intended to provide an alternative cross-platform interface.
 
+Currently, the code has been tested on:
+ - EBC-A05+
+
 ## Control module
 
 The 'zketech.py' module provides the main control functions of the device.
