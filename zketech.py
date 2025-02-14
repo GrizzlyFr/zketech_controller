@@ -172,10 +172,6 @@ class PartNumber(Enum):
     
 # Main usage functions
 
-def ZketechParametersError(Exception):
-    """To be raised when an improper parameter is passed"""
-    pass
-
 
 def zketech_checksum(buff: bytes) -> int:
     """Compute the chekcum used by zketech equipments."""
@@ -225,6 +221,10 @@ def check_buffer_validity(buff:bytes) -> bool:
 
 
 # Main usage classes
+
+class ZketechParametersError(Exception):
+    """To be raised when an improper parameter is passed"""
+    pass
 
 @dataclass
 class RequestDataSet:

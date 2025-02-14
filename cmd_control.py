@@ -13,7 +13,7 @@ from zketech import Zketech, ZketechParametersError, ResponseDataSet
 
 WORKING_DIRECTORY = r"./local_files"
 LOGGING_FILENAME = r"zketech.log"
-LOGGING_LEVEL = logging.INFO
+LOGGING_LEVEL = logging.DEBUG
 BLOCKING_SAFETY_WATCHER = True
 
 if not os.path.exists(WORKING_DIRECTORY):
@@ -543,7 +543,7 @@ if __name__ == "__main__":
                     print(f"{i}: {c.prompt}")
                 func_id = input("> ")
                 try:
-                    choice_made = choices_available[int(func_id)]
+                    chosen_function = choices_available[int(func_id)]
                 except TypeError:
                     print("Function number shall be an integer")
                     continue
@@ -555,11 +555,11 @@ if __name__ == "__main__":
                     continue
                 try:
                     print()
-                    choice_made(zk, sw)
+                    chosen_function(zk, sw)
                 except KeyboardInterrupt:
                     pass
-                except ZketechParametersError:
-                    print("The function was requested with an improper parameter")
+                except ZketechParametersError as e:
+                    print(e)
                 
         except KeyboardInterrupt:
             pass
