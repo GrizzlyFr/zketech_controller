@@ -94,7 +94,7 @@ class EvaluateDevice:
         logger.info("Start program 'EvaluateDevice'")
         device.get_device_state()
         print(f"Device in state {zk.device_state.name}")
-        logger.info(f"Stop program 'EvaluateDevice' with result: {zk.device_state}")
+        logger.info(f"End of 'EvaluateDevice' with result: {zk.device_state}")
 
 class StartDevice:
     """Request the device to continuously send response frames."""
@@ -104,7 +104,6 @@ class StartDevice:
     def __init__(self, device: Zketech, sw: SafetyWatcher):
         logger.info("Start program 'StartDevice'")
         device.start_device()
-        logger.info("Stop program 'StartDevice'")
 
 class StopDevice:
     """Request the device to stop sending response frames."""
@@ -114,7 +113,6 @@ class StopDevice:
     def __init__(self, device: Zketech, sw: SafetyWatcher):
         logger.info("Start program 'StopDevice'")
         device.stop_device()
-        logger.info("Stop program 'StopDevice'")
 
 class ContinuousRead:
     """Continuously read data from the device"""
@@ -173,6 +171,7 @@ class ContinuousReadDuringTest:
                     else:
                         print("Received a warning from the safety watcher, continuing")
                 print(format_resp_for_print(resp))
+        logger.info("Stop program 'ContinuousReadDuringTest'")
 
 class StopTest:
     """Stop current running test."""
@@ -182,7 +181,6 @@ class StopTest:
     def __init__(self, device: Zketech, sw: SafetyWatcher):
         logger.info("Start program 'StopTest'")
         device.stop_test()
-        logger.info("Stop program 'StopTest'")
 
 class ConstantCurrentDischarge:
     """Do a discharge test at constant current."""
@@ -219,7 +217,6 @@ class ConstantCurrentDischarge:
         device.discharge_cc(self.current,
                             self.cutoff_voltage,
                             self.max_duration)
-        logger.info("Stop program 'ConstantCurrentDischarge'")
         
 class ConstantPowerDischarge:
     """Do a discharge test at constant power."""
@@ -401,7 +398,6 @@ class ResistanceMeasurement:
         else:
             print(f"Measured resistance: {resistance} mOhm")
             logger.info(f"Measured resistance: {resistance} mOhm")
-        logger.info(f"Stop program 'ConstantCurrentDischarge' with a returned value of '{resistance}'")
 
 class LowVoltageCalibration:
     """Calibrate the lower values of the voltage measurement."""
