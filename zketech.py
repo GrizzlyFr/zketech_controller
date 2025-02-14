@@ -91,7 +91,7 @@ class ReqCode(Enum):
     start_c_liion =     0b01000001
     start_c_life =      0b01010001
     start_c_vrla =      0b01100001
-    start_c_cv =        0b01111000
+    start_c_cv =        0b01110001
     conti_d_cc =        0b00001000
     conti_d_cp =        0b00011000
     conti_c_nimh =      0b00101000
