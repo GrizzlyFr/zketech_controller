@@ -253,9 +253,8 @@ class ConstantPowerDischarge:
         device.discharge_cc(self.power,
                             self.cutoff_voltage,
                             self.max_duration)
-        logger.info("Stop program 'ConstantPowerDischarge'")
 
-class _GenericCharge:
+class _GenericCurrentCharge:
 
     def __init__(self, device: Zketech, sw: SafetyWatcher):
         print("Enter current setpoint (A):")
@@ -284,7 +283,7 @@ class _GenericCharge:
             return False
         return True
 
-class NimhCharge(_GenericCharge):
+class NimhCharge(_GenericCurrentCharge):
     """Charge a NiMh battery or battery pack."""
 
     prompt = "Charge a NiMh battery or battery pack"
@@ -297,9 +296,8 @@ class NimhCharge(_GenericCharge):
         device.charge_nimh(self.current,
                            self.nb_cells,
                            self.max_duration)
-        logger.info("Stop program 'NimhCharge'")
 
-class NicdCharge(_GenericCharge):
+class NicdCharge(_GenericCurrentCharge):
     """Charge a NiCd battery or battery pack."""
 
     prompt = "Charge a NiCd battery or battery pack"
@@ -312,9 +310,8 @@ class NicdCharge(_GenericCharge):
         device.charge_nicd(self.current,
                            self.nb_cells,
                            self.max_duration)
-        logger.info("Stop program 'NicdCharge'")
 
-class LiionCharge(_GenericCharge):
+class LiionCharge(_GenericCurrentCharge):
     """Charge a LiIon battery or battery pack."""
 
     prompt = "Charge a LiIon battery or battery pack"
@@ -327,9 +324,8 @@ class LiionCharge(_GenericCharge):
         device.charge_liion(self.current,
                             self.nb_cells,
                             self.max_duration)
-        logger.info("Stop program 'LiionCharge'")
 
-class LifeCharge(_GenericCharge):
+class LifeCharge(_GenericCurrentCharge):
     """Charge a LiFe battery or battery pack."""
 
     prompt = "Charge a LiFe battery or battery pack"
@@ -342,9 +338,8 @@ class LifeCharge(_GenericCharge):
         device.charge_life(self.current,
                            self.nb_cells,
                            self.max_duration)
-        logger.info("Stop program 'LifeCharge'")
 
-class VrlaCharge(_GenericCharge):
+class VrlaCharge(_GenericCurrentCharge):
     """Charge a VRLA battery or battery pack."""
 
     prompt = "Charge a VRLA battery or battery pack"
@@ -357,9 +352,37 @@ class VrlaCharge(_GenericCharge):
         device.charge_vrla(self.current,
                            self.nb_cells,
                            self.max_duration)
-        logger.info("Stop program 'VrlaCharge'")
 
-class CvCharge(_GenericCharge):
+class _GenericVoltageCharge:
+
+    def __init__(self, device: Zketech, sw: SafetyWatcher):
+        print("Enter voltage setpoint (V):")
+        voltage = input("> ")
+        try:
+            self.voltage = float(voltage)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User types a wrong value")
+            return False
+        print("Enter the cutoff current (A):")
+        cutoff_current = input("> ")
+        try:
+            self.cutoff_current = float(cutoff_current)
+        except:
+            print("The input parameter shall be a float value")
+            logger.info("User types a wrong value")
+            return False
+        print("Enter max duration (min), '0' for no timeout:")
+        max_duration = input("> ")
+        try:
+            self.max_duration = int(max_duration)
+        except:
+            print("The input parameter shall be a integer value")
+            logger.info("User types a wrong value")
+            return False
+        return True
+
+class CvCharge(_GenericVoltageCharge):
     """Charge a generic battery or battery pack at constant voltage."""
 
     prompt = "Charge a generic battery or battery pack at constant voltage"
@@ -368,11 +391,10 @@ class CvCharge(_GenericCharge):
         logger.info("Getting parameters for 'CvCharge'")
         if not super().__init__(device, sw) == True:
             return
-        logger.info(f"Start program 'CvCharge' with parameters: {(self.current, self.nb_cells, self.max_duration)}")
-        device.charge_cv(self.current,
-                         self.nb_cells,
+        logger.info(f"Start program 'CvCharge' with parameters: {(self.voltage, self.cutoff_current, self.max_duration)}")
+        device.charge_cv(self.voltage,
+                         self.cutoff_current,
                          self.max_duration)
-        logger.info("Stop program 'CvCharge'")
 
 class ResistanceMeasurement:
     """Measure the internal resistance of the battery."""

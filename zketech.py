@@ -636,7 +636,7 @@ class Zketech(Serial):
         logger.debug(f"Sending request {(req_code, p1, p2, p3)}")
         self.send_request(req_code, p1, p2, p3)
 
-    def _charge_generic(self,
+    def _current_charge_generic(self,
                         req_code: ReqCode,
                         current: float,
                         nb_cells: int,
@@ -666,7 +666,7 @@ class Zketech(Serial):
                     max_duration: int) -> None:
         """Request the device to start a charge of a NiMh type battery."""
         req_code = ReqCode["start_c_nimh"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._current_charge_generic(req_code, current, nb_cells, max_duration)
      
     def charge_nicd(self,
                     current: float,
@@ -674,7 +674,7 @@ class Zketech(Serial):
                     max_duration: int) -> None:
         """Request the device to start a charge of a NiCd type battery."""
         req_code = ReqCode["start_c_nicd"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._current_charge_generic(req_code, current, nb_cells, max_duration)
      
     def charge_liion(self,
                     current: float,
@@ -682,7 +682,7 @@ class Zketech(Serial):
                     max_duration: int) -> None:
         """Request the device to start a charge of a lithium-ion type battery."""
         req_code = ReqCode["start_c_liion"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._current_charge_generic(req_code, current, nb_cells, max_duration)
      
     def charge_life(self,
                     current: float,
@@ -690,7 +690,7 @@ class Zketech(Serial):
                     max_duration: int) -> None:
         """Request the device to start a charge of a LiFe type battery."""
         req_code = ReqCode["start_c_life"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._current_charge_generic(req_code, current, nb_cells, max_duration)
      
     def charge_vrla(self,
                     current: float,
@@ -698,15 +698,39 @@ class Zketech(Serial):
                     max_duration: int) -> None:
         """Request the device to start a charge of a lead-acid type battery."""
         req_code = ReqCode["start_c_vrla"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._current_charge_generic(req_code, current, nb_cells, max_duration)
+
+    def _voltage_charge_generic(self,
+                        req_code: ReqCode,
+                        voltage: float,
+                        cutoff_current: float,
+                        max_duration: int) -> None:
+#        if not self.device_state == DeviceState["monitoring"]:
+#            logger.warning(f"A startup of a test was requested while device in wrong state ({self.device_state})")
+#            return
+        if voltage < 0:
+            raise ZketechParametersError("Voltage shall be positive")
+        if cutoff_current < 0:
+            raise ZketechParametersError("Cutoff current shall be positive")
+        if max_duration < 0:
+            raise ZketechParametersError("Max Duration shall be positive")
+        if max_duration > 999:
+            raise ZketechParametersError("Max Duration shall be inferior to 999")
+        # #TBDone: checking bad parameters for superior boundaries
+        req_code = req_code
+        p1 = int(cutoff_current*100)
+        p2 = int(voltage*1000)
+        p3 = int(max_duration)
+        logger.debug(f"Sending request {(req_code, p1, p2, p3)}")
+        self.send_request(req_code, p1, p2, p3)
      
     def charge_cv(self,
-                  current: float,
-                  nb_cells: int,
-                  max_duration: int) -> None:
+                    voltage: float,
+                    cutoff_current: float,
+                    max_duration: int) -> None:
         """Request the device to start a charge at constant voltage."""
         req_code = ReqCode["start_c_cv"]
-        self._charge_generic(req_code, current, nb_cells, max_duration)
+        self._voltage_charge_generic(req_code, voltage, cutoff_current, max_duration)
      
     def measure_resistance(self,
                            current: int) -> None:
