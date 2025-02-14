@@ -273,7 +273,7 @@ class _GenericCurrentCharge:
             print("The input parameter shall be a integer value")
             logger.info("User types a wrong value")
             return False
-        print("Enter current setpoint (min), '0' for no timeout:")
+        print("Enter max duration (min), '0' for no timeout:")
         max_duration = input("> ")
         try:
             self.max_duration = int(max_duration)
